@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Skywave</title>
+  <meta name="description" content="Watch shortwave radio propagate around the world: day and night, the grey line, solar flux, flares, storms and sporadic-E, with hundreds of amateur stations making contacts. Works offline.">
+  <meta name="theme-color" content="#03060b">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Icon sprite: 24×24 line icons drawn in currentColor; use as <svg class="icon"><use href="#i-name"/></svg>. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6.5" y="5.5" width="3.5" height="13" rx="1" fill="currentColor"/><rect x="14" y="5.5" width="3.5" height="13" rx="1" fill="currentColor"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M5.5 6v12l9-6z" fill="currentColor"/><path d="M18.5 6v12"/></symbol>
+    <symbol id="i-bands" viewBox="0 0 24 24"><path d="M4 19V13M9 19V9M14 19V5M19 19V11"/></symbol>
+    <symbol id="i-log" viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h8M16 18h4"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path d="M3.5 9.5H7L11.5 5.5v13L7 14.5H3.5z"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M17.5 6.5a7.5 7.5 0 0 1 0 11"/></symbol>
+    <symbol id="i-sound-off" viewBox="0 0 24 24"><path d="M3.5 9.5H7L11.5 5.5v13L7 14.5H3.5z"/><path d="M15.5 9.5l5 5M20.5 9.5l-5 5"/></symbol>
+    <symbol id="i-muf" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c3 3 3 14 0 17M12 3.5c-3 3-3 14 0 17"/></symbol>
+    <symbol id="i-labels" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M7 9.5h4M13.5 9.5h3.5"/></symbol>
+    <symbol id="i-fullscreen" viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></symbol>
+    <symbol id="i-hide" viewBox="0 0 24 24"><path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z"/><circle cx="12" cy="12" r="2.5"/><path d="M4 4l16 16"/></symbol>
+    <symbol id="i-install" viewBox="0 0 24 24"><path d="M12 4v11"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M5 19.5h14"/></symbol>
+  </svg>
+
+  <canvas id="view" aria-label="A world map of shortwave propagation and the contacts being made"></canvas>
+
+  <div id="hud">
+    <header id="cards">
+      <div class="card" id="card-clock">
+        <div class="name"></div>
+        <div class="sub"><span class="date"></span><span class="sun"></span></div>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="card" id="card-log">
+        <div class="name"></div>
+        <div class="sub"><span class="hour"></span><span class="best"></span></div>
+      </div>
+    </header>
+    <div id="meta"><span id="day-no"></span> · <span id="clock">00:00</span> · <button id="seed" title="Copy a link that replays this run"></button></div>
+    <ol id="feed" aria-live="polite"></ol>
+
+    <aside id="bands" class="panel" hidden aria-label="Band conditions"></aside>
+    <aside id="log" class="panel" hidden aria-label="Log of recent contacts"></aside>
+    <aside id="settings" class="panel" hidden aria-label="Settings">
+      <h2>Settings</h2>
+      <button class="row" id="set-install" hidden><svg class="icon"><use href="#i-install"/></svg><span>Install app<small></small></span></button>
+      <button class="row" id="set-sound" role="switch"><svg class="icon"><use href="#i-sound"/></svg><span>Sound<small>band noise and the odd CW contact</small></span><i class="switch"></i></button>
+      <button class="row" id="set-muf" role="switch"><svg class="icon"><use href="#i-muf"/></svg><span>MUF map<small>colours the map by the highest band a 3000 km hop can use</small></span><i class="switch"></i></button>
+      <button class="row" id="set-calls" role="switch"><svg class="icon"><use href="#i-labels"/></svg><span>Callsigns on the map</span><i class="switch"></i></button>
+      <button class="row" id="set-full" role="switch"><svg class="icon"><use href="#i-fullscreen"/></svg><span>Fullscreen</span><i class="switch"></i></button>
+      <button class="row" id="set-hide"><svg class="icon"><use href="#i-hide"/></svg><span>Hide interface<small>tap the screen or press H to bring it back</small></span></button>
+      <dl class="keys">
+        <dt>Space</dt><dd>pause</dd><dt>+ −</dt><dd>speed</dd><dt>N</dt><dd>new run</dd>
+        <dt>B</dt><dd>bands</dd><dt>L</dt><dd>log</dd><dt>S</dt><dd>settings</dd>
+        <dt>U</dt><dd>MUF map</dd><dt>K</dt><dd>callsigns</dd><dt>M</dt><dd>sound</dd>
+        <dt>F</dt><dd>fullscreen</dd><dt>H</dt><dd>hide interface</dd>
+      </dl>
+      <p class="version" id="version"></p>
+    </aside>
+
+    <nav id="controls" aria-label="Controls">
+      <button id="btn-pause" title="Pause (Space)" aria-label="Pause"><svg class="icon"><use href="#i-pause"/></svg></button>
+      <button id="btn-speed" title="Speed (+/−)" aria-label="Speed">1×</button>
+      <button id="btn-next" title="New run (N)" aria-label="New run"><svg class="icon"><use href="#i-next"/></svg></button>
+      <button id="btn-bands" title="Band conditions (B)" aria-label="Band conditions"><svg class="icon"><use href="#i-bands"/></svg></button>
+      <button id="btn-log" title="Log (L)" aria-label="Log"><svg class="icon"><use href="#i-log"/></svg></button>
+      <button id="btn-settings" title="Settings (S)" aria-label="Settings"><svg class="icon"><use href="#i-settings"/></svg></button>
+    </nav>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

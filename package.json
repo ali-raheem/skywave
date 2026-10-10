@@ -1,0 +1,13 @@
+{
+  "name": "skywave",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A world map of shortwave propagation and amateur radio contacts, installable as an offline PWA.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "serve": "python3 -m http.server 8080",
+    "bump": "node scripts/bump.mjs",
+    "icons": "python3 scripts/make_icons.py"
+  }
+}
