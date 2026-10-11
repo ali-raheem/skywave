@@ -1,5 +1,14 @@
 # Skywave
 
+[![CI](https://github.com/ali-raheem/skywave/actions/workflows/ci.yml/badge.svg)](https://github.com/ali-raheem/skywave/actions/workflows/ci.yml) [![GitHub Pages](https://github.com/ali-raheem/skywave/actions/workflows/pages.yml/badge.svg)](https://github.com/ali-raheem/skywave/actions/workflows/pages.yml)
+
+**▶ Try it live: [shoryuken.me/skywave](https://shoryuken.me/skywave/)** · mirror on [GitHub Pages](https://ali-raheem.github.io/skywave/) · installable, works offline
+
+<p align="center">
+  <a href="https://shoryuken.me/skywave/"><img src="docs/screenshots/desktop.webp" alt="Skywave on a desktop browser" width="74%"></a>
+  <a href="https://shoryuken.me/skywave/"><img src="docs/screenshots/mobile.webp" alt="Skywave on a phone" width="22%"></a>
+</p>
+
 A world map of shortwave radio propagation. The sun crosses the map and the night side,
 grey line and maximum usable frequency (MUF) follow it. A few hundred amateur radio stations
 call CQ, pick a band that's open from where they are, and work whoever answers. Each contact
